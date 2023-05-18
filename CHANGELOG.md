@@ -1,6 +1,11 @@
+## 0.1.2
+
+* Add a screenshot
+* Improve README and description
+
 ## 0.1.1
 
-* README and description improvements.
+* Improve README and description
 
 
 ## 0.1.0
