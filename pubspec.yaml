@@ -1,9 +1,9 @@
 name: go_router_tabs
-description: A wrapper around the go_router package that provides the current sub-route index of a ShellRoute and the direction user came from based on the previous index.
-version: 0.1.0
+description: A [go_router](https://pub.dev/packages/go_router) package add-on to improve tabbed navigation. It features a special ShellRoute that provides both the selected navigation item index and transition direction - regardless of the current route's nesting level or the user's navigation path.
+version: 0.1.1
 homepage: https://github.com/JakesMD/flutter_go_router_tabs
 screenshots:
-  - description: 'This is a preview animation of a web app navigating between tabs using this package.'
+  - description: 'This is an animation of a web app navigating between tabs using this package.'
     path: screenshots/preview.gif
 
 environment:

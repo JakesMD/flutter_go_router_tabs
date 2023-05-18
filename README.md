@@ -1,12 +1,13 @@
-A wrapper around the [go_router](https://pub.dev/packages/go_router) package that provides the current sub-route index of a ShellRoute and the direction user came from based on the previous index.
+A [go_router](https://pub.dev/packages/go_router) package add-on to improve tabbed navigation. It features a special ShellRoute that provides both the selected navigation item index and transition direction - regardless of the current route's nesting level or the user's navigation path.
 
 ## :sparkles: Features
 * Seamless intergration with existing GoRouter setups.
-* Always know the current sub-route index of a ShellRoute no matter how deeply nested the currently displayed route is or how the user got there.
-* Know which direction the user came from so you can build awesome transitions based on the index of the previous and current route.
-* Nest navigation bars without an issue.
-* An extension on GoRouter's CustomTransitionPage to allow for better control over your transitions.
-* Built-in transition presets.
+* Provides the selected navigation item index no matter how deeply nested the current route is or how the user got there.
+* Provides the direction the user came from so you can build awesome transitions based on the previous and current navigation item index.
+* Nested navigation bar setups work without an issue.
+* No need for global navigation bar controllers.
+* Comes with an extension on GoRouter's CustomTransitionPage to allow for better control over your transitions.
+* Comes with neat transition presets.
 
 ## :rocket: Getting started
 Note: there's no need to install the `go_router` package seperately. This package exports `go_router` to avoid version conflicts. 
@@ -47,7 +48,7 @@ TabShellRoute(
 )
 ```
 
-The `childPageBuilder` is the page builder for the sub-routes. It gives you the direction - useful for slide transitions for example - based on the previous and current sub-route. The direction parameter is actually a `TextDirection Function()` and needs to be evoked inside any transitions builder to fetch the latest direction from the TabShellRoute. `childPageBuilder` will not override already defined page builders in the children.
+The `childPageBuilder` is the page builder for the sub-routes. It gives you the direction - useful for slide transitions for example - based on the previous and current sub-route. The direction parameter is actually a `TextDirection Function()` and needs to be evoked inside your transitions builder to fetch the latest direction from the TabShellRoute. `childPageBuilder` will not override already defined page builders in the children.
 ``` dart
 TabShellRoute(
   childPageBuilder: (context, state, direction, child) {
