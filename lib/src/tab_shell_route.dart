@@ -108,18 +108,22 @@ class TabShellRoute {
   /// Finds the index of the new route and updates [_currentSubrouteIndex] and
   /// [_previousSubrouteIndex] accordingly.
   void _updateSubrouteIndex(GoRouterState state) {
-    final newSubrouteIndex = _routePaths.indexWhere(
-      (route) {
-        for (final routePath in route) {
-          if (state.location.startsWith(routePath)) return true;
-        }
-        return false;
-      },
-    );
-    if (_currentSubrouteIndex == -1) return;
+    int? bestRoutePathIndex;
+    var highScore = 0;
 
+    for (int i = 0; i < _routePaths.length; i++) {
+      for (final path in _routePaths[i]) {
+        final match = RegExp(path).matchAsPrefix(state.location);
+        if ((match?.end ?? 0) > highScore) {
+          highScore = match!.end;
+          bestRoutePathIndex = i;
+        }
+      }
+    }
+
+    if (bestRoutePathIndex == null) return;
     _previousSubrouteIndex = _currentSubrouteIndex;
-    _currentSubrouteIndex = newSubrouteIndex;
+    _currentSubrouteIndex = bestRoutePathIndex;
   }
 
   /// Generates a new [GoRoute] with an updated builder and page builder.

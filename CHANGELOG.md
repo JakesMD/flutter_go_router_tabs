@@ -1,7 +1,13 @@
+## 0.1.3
+
+* Fix bug
+
+
 ## 0.1.2
 
 * Add a screenshot
 * Improve README and description
+
 
 ## 0.1.1
 

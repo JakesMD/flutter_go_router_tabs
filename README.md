@@ -1,5 +1,7 @@
 A [go_router](https://pub.dev/packages/go_router) package add-on to improve tabbed navigation. It features a special ShellRoute that provides both the selected navigation item index and transition direction - regardless of the current route's nesting level or the user's navigation path.
 
+![An animation of a web app navigating between tabs using this package.](https://raw.githubusercontent.com/JakesMD/flutter_go_router_tabs/main/screenshots/preview.gif)
+
 ## :sparkles: Features
 * Seamless integration with existing GoRouter setups.
 * Provides the selected navigation item index no matter how deeply nested the current route is or how the user got there.
