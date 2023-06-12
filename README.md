@@ -12,7 +12,7 @@ A [go_router](https://pub.dev/packages/go_router) package add-on to improve tabb
 * Comes with neat transition presets.
 
 ## :rocket: Getting started
-Note: there's no need to install the `go_router` package seperately. This package exports `go_router` to avoid version conflicts. 
+Note: You'll need to install the `go_router` package seperately. This package **no longer** exports `go_router` to allow you to set a specific version of go_router in your app if required.
 
 Install it:
 ``` dart
@@ -153,4 +153,4 @@ TabTransitionPage.verticalSlideFadeTransition;
 ```
 
 ## :information_source: Additional Information
-Please don't hesitate to report any issues or feature requests on [GitHub](https://github.com/JakesMD/flutter_go_router_tabs).
+Please don't hesitate to report any issues or feature requests on [GitHub](https://github.com/JakesMD/flutter_go_router_tabs/issues).

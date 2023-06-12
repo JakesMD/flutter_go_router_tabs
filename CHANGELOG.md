@@ -1,3 +1,6 @@
+## 0.2.0
+* Upgrade go_router version and remove export
+
 ## 0.1.3
 
 * Fix bug
