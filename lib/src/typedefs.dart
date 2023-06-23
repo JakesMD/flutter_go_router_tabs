@@ -23,9 +23,18 @@ typedef TabShellRouteBuilder = Widget Function(
   Widget child,
 );
 
-typedef TabShellRouteChildPageBuilder<T> = Page<T> Function(
+typedef TabShellRouteSubPageBuilder<T> = Page<T> Function(
   BuildContext context,
   GoRouterState state,
   TextDirection Function() direction,
   Widget child,
+);
+
+typedef TabShellRouteRoutesBuilder = List<RouteBase> Function(
+  Page Function(
+    BuildContext context,
+    GoRouterState state, {
+    required Widget child,
+  })? subPageBuilder,
+  TextDirection Function() direction,
 );

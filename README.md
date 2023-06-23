@@ -28,6 +28,13 @@ Now check out the [example](https://github.com/JakesMD/flutter_go_router_tabs/tr
 
 
 ## :joystick: Usage
+### :boom: Breaking Changes from 0.3.0!
+These changes allow for custom GoRoutes or ShellRoutes:
+* `childPageBuilder` has been renamed to `subPageBuilder`.
+* `TabShellRoute` no longer sets the page builders of its sub-routes.
+* Instead, the `subPageBuilder` and `direction` are passed into `routes` which is now a `List Function()`.
+* See the Usage/TabShellRoute section for more details...
+
 ### TabShellRoute
 Because `TabShellRoute().toShellRoute` is a `ShellRoute` you can add it anywhere within your existing GoRouter routes list:
 ``` dart
@@ -47,13 +54,13 @@ TabShellRoute(
       child: child,
     );
   },
-)
+).toShellRoute
 ```
 
-The `childPageBuilder` is the page builder for the sub-routes. It gives you the direction - useful for slide transitions for example - based on the previous and current sub-route. The direction parameter is actually a `TextDirection Function()` and needs to be evoked inside your transitions builder to fetch the latest direction from the TabShellRoute. `childPageBuilder` will not override already defined page builders in the children.
+The `subPageBuilder` is an optional page builder for the sub-routes and is used to avoid duplicate code. It gives you the direction - useful for slide transitions for example - based on the previous and current sub-route. The direction parameter is actually a `TextDirection Function()` and needs to be evoked inside your transitions builder to fetch the latest direction from the TabShellRoute.
 ``` dart
 TabShellRoute(
-  childPageBuilder: (context, state, direction, child) {
+  subPageBuilder: (context, state, direction, child) {
     return TabTransitionPage(
       key: state.pageKey, // IMPORTANT! DON'T FORGET!
       child: child,
@@ -61,10 +68,10 @@ TabShellRoute(
       transitionsBuilder: TabTransitionPage.verticalSlideFadeTransition,
     );
   },
-)
+).toShellRoute
 ```
 
-Now you can add GoRoutes, ShellRoutes or TabShellRoutes to `routes` like a normal ShellRoute:
+`routes` is a builder that comes with sub page builder (which is defined by you in `subPageBuilder`) and direction parameters. Now you can add GoRoutes, ShellRoutes, TabShellRoutes or your own custom routes:
 ```dart
 TabShellRoute(
   builder: (context, state, index, child) {
@@ -73,7 +80,7 @@ TabShellRoute(
       child: child,
     );
   },
-  childPageBuilder: (context, state, direction, child) {
+  subPageBuilder: (context, state, direction, child) {
     return TabTransitionPage(
       key: state.pageKey,
       child: child,
@@ -81,18 +88,22 @@ TabShellRoute(
       transitionsBuilder: TabTransitionPage.verticalSlideFadeTransition,
     );
   },
-  routes: [
+  routes: (subPageBuilder, direction) => [
     GoRoute(
       path: "/first",
-      builder: (context, state) => const FirstPage(),
+      pageBuilder: (context, state) => subPageBuilder!(
+        context,
+        state,
+        child: const FirstScreen(),
+      ),
     ),
-    GoRoute(
+    CustomGoRoute(
       path: "/second",
-      builder: (context, state) => const SecondPage(),
-    ),
-    GoRoute(
-      path: "/third",
-      builder: (context, state) => const ThirdPage(),
+      pageBuilder: (context, state) => subPageBuilder!(
+        context,
+        state,
+        child: const SecondScreen(),
+      ),
     ),
   ],
 ).toShellRoute,
@@ -109,7 +120,7 @@ TabTransitionPage(
 );
 ```
 
-The `transitionsBuilder` comes with an additional `direction` parameter - useful for slide transitions. You'll need to pass in the `direction` parameter from the `childPageBuilder`.
+The `transitionsBuilder` comes with an additional `direction` parameter - useful for slide transitions. You'll need to pass in the `direction` parameter from the `subPageBuilder`.
 ``` dart
 TabTransitionPage(
   direction: direction,

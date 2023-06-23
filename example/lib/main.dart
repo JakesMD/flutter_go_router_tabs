@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
               selectedIndex: index,
               child: child,
             ),
-            childPageBuilder: (context, state, direction, child) {
+            subPageBuilder: (context, state, direction, child) {
               return TabTransitionPage(
                 key: state.pageKey,
                 child: child,
@@ -37,23 +37,33 @@ class MyApp extends StatelessWidget {
                     TabTransitionPage.verticalSlideFadeTransition,
               );
             },
-            routes: [
+            routes: (subPageBuilder, direction) => [
               GoRoute(
                 path: MyRoutePaths.favorite,
-                builder: (context, state) => const MySubScreen("Favorite"),
+                pageBuilder: (context, state) => subPageBuilder!(
+                  context,
+                  state,
+                  child: const MySubScreen("Favorite"),
+                ),
               ),
               GoRoute(
                 path: MyRoutePaths.bookmark,
-                builder: (context, state) => const MySubScreen("Bookmark"),
+                pageBuilder: (context, state) => subPageBuilder!(
+                  context,
+                  state,
+                  child: const MySubScreen("Bookmark"),
+                ),
               ),
               TabShellRoute(
-                builder: (context, state, index, child) {
-                  return MySubScreenWithBottomNav(
+                pageBuilder: (context, state, index, child) => subPageBuilder!(
+                  context,
+                  state,
+                  child: MySubScreenWithBottomNav(
                     selectedIndex: index,
                     child: child,
-                  );
-                },
-                childPageBuilder: (context, state, direction, child) {
+                  ),
+                ),
+                subPageBuilder: (context, state, direction, child) {
                   return TabTransitionPage(
                     key: state.pageKey,
                     child: child,
@@ -62,18 +72,30 @@ class MyApp extends StatelessWidget {
                         TabTransitionPage.horizontalSlideFadeTransition,
                   );
                 },
-                routes: [
+                routes: (subPageBuilder, direction) => [
                   GoRoute(
                     path: MyRoutePaths.explore,
-                    builder: (context, state) => const MySubScreen("Explore"),
+                    pageBuilder: (context, state) => subPageBuilder!(
+                      context,
+                      state,
+                      child: const MySubScreen("Explore"),
+                    ),
                   ),
                   GoRoute(
                     path: MyRoutePaths.commute,
-                    builder: (context, state) => const MySubScreen("Commute"),
+                    pageBuilder: (context, state) => subPageBuilder!(
+                      context,
+                      state,
+                      child: const MySubScreen("Commute"),
+                    ),
                   ),
                   GoRoute(
                     path: MyRoutePaths.alarm,
-                    builder: (context, state) => const MySubScreen("Alarm"),
+                    pageBuilder: (context, state) => subPageBuilder!(
+                      context,
+                      state,
+                      child: const MySubScreen("Alarm"),
+                    ),
                   ),
                 ],
               ).toShellRoute,

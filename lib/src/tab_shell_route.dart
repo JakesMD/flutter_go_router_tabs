@@ -5,16 +5,17 @@ import "typedefs.dart";
 
 /// A temperary class that will be converted into a [ShellRoute].
 ///
-/// During the conversion the [TabShellRoute] will set the page builder of each
-/// child route to the one defined by [childPageBuilder]. However it will not
-/// override the page builder of a child if the page builder is given.
-///
-/// [childPageBuilder] comes with an additional direction parameter that
-/// is used to set the direction of slide transitions. This direction parameter
-/// is based on the previous and current sub-route index.
+/// The optional [subPageBuilder] is used to avoid duplicate code. It comes
+/// with a direction parameter that is used to set the direction of slide
+/// transitions. This direction parameter is based on the previous and current
+/// sub-route index.
 ///
 /// Both [builder] and [pageBuilder] come with an additional index parameter
 /// that contains the index of the sub-route currently being displayed.
+///
+/// [routes] come with an additional sub page builder parameter that you
+/// define in [subPageBuilder] as well as a direction parameter. This makes it
+/// possible for you to use custom GoRoutes or ShellRoutes.
 ///
 /// A [ShellRoute] is a route that displays a UI shell around the matching child
 /// route.
@@ -45,13 +46,14 @@ class TabShellRoute {
   /// This will override the child page builder of a parent TabShellRoute.
   final TabShellRoutePageBuilder? pageBuilder;
 
-  /// The page builder for the sub-routes.
+  /// An optional page builder for the sub-routes which is used to avoid
+  /// duplicate code. It will be passed into [routes].
   ///
   /// Similar to [GoRoute.pageBuilder], but with an additional direction
   /// parameter. This direction parameter - used as the direction for
   /// transitions like slide transitions - is based on the index of the
   /// previously visited sub-route.
-  final TabShellRouteChildPageBuilder? childPageBuilder;
+  final TabShellRouteSubPageBuilder? subPageBuilder;
 
   /// The observers for a shell route.
   ///
@@ -65,7 +67,11 @@ class TabShellRoute {
   final GlobalKey<NavigatorState>? navigatorKey;
 
   /// The list of child routes associated with this route.
-  final List<RouteBase> routes;
+  ///
+  /// It come with an additional sub page builder parameter that you
+  /// define in [subPageBuilder] as well as a direction parameter. This makes it
+  /// possible for you to use custom GoRoutes or ShellRoutes.
+  final TabShellRouteRoutesBuilder routes;
 
   /// Creates a temperary class that will be converted into a [ShellRoute].
   TabShellRoute({
@@ -73,13 +79,9 @@ class TabShellRoute {
     this.navigatorKey,
     this.builder,
     this.pageBuilder,
-    this.childPageBuilder,
-    this.routes = const [],
-  }) : assert(builder != null || pageBuilder != null) {
-    _routePaths = [
-      for (final route in routes) _fetchRoutePaths([route])
-    ];
-  }
+    this.subPageBuilder,
+    required this.routes,
+  }) : assert(builder != null || pageBuilder != null);
 
   /// A list containing a list of the top level route paths for each route.
   late List<List<String>> _routePaths;
@@ -95,8 +97,8 @@ class TabShellRoute {
     var paths = <String>[];
 
     for (final route in newRoutes) {
-      if (route.runtimeType == GoRoute) {
-        paths.add((route as GoRoute).path);
+      if (route is GoRoute) {
+        paths.add(route.path);
       } else {
         paths.addAll(_fetchRoutePaths(route.routes));
       }
@@ -126,46 +128,6 @@ class TabShellRoute {
     _currentSubrouteIndex = bestRoutePathIndex;
   }
 
-  /// Generates a new [GoRoute] with an updated builder and page builder.
-  GoRoute _buildGoRoute(GoRoute route) {
-    return GoRoute(
-      path: route.path,
-      name: route.name,
-      parentNavigatorKey: route.parentNavigatorKey,
-      redirect: route.redirect,
-      builder: childPageBuilder == null ? route.builder : null,
-      pageBuilder: route.pageBuilder ??
-          (childPageBuilder != null && route.builder != null
-              ? (context, state) => childPageBuilder!(
-                    context,
-                    state,
-                    direction,
-                    route.builder!(context, state),
-                  )
-              : null),
-      routes: route.routes,
-    );
-  }
-
-  /// Generates a new [ShellRoute] with an updated builder and page builder.
-  ShellRoute _buildShellRoute(ShellRoute route) {
-    return ShellRoute(
-      navigatorKey: route.navigatorKey,
-      observers: route.observers,
-      builder: childPageBuilder == null ? route.builder : null,
-      pageBuilder: route.pageBuilder ??
-          (childPageBuilder != null && route.builder != null
-              ? (context, state, child) => childPageBuilder!(
-                    context,
-                    state,
-                    direction,
-                    route.builder!(context, state, child),
-                  )
-              : null),
-      routes: route.routes,
-    );
-  }
-
   /// Gets the direction of a transition.
   ///
   /// This needs to be a Function in order for a transition to fetch the latest
@@ -178,6 +140,22 @@ class TabShellRoute {
 
   /// Generates a [ShellRoute] from this [TabShellRoute].
   ShellRoute get toShellRoute {
+    final newRoutes = routes(
+      subPageBuilder != null
+          ? (context, state, {required Widget child}) => subPageBuilder!(
+                context,
+                state,
+                direction,
+                child,
+              )
+          : null,
+      direction,
+    );
+
+    _routePaths = [
+      for (final route in newRoutes) _fetchRoutePaths([route])
+    ];
+
     return ShellRoute(
       observers: observers,
       navigatorKey: navigatorKey,
@@ -193,14 +171,7 @@ class TabShellRoute {
               return pageBuilder!(context, state, _currentSubrouteIndex, child);
             }
           : null,
-      routes: routes.map<RouteBase>(
-        (route) {
-          if (route.runtimeType == GoRoute) {
-            return _buildGoRoute(route as GoRoute);
-          }
-          return _buildShellRoute(route as ShellRoute);
-        },
-      ).toList(),
+      routes: newRoutes,
     );
   }
 }
