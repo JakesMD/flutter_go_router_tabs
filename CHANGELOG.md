@@ -1,7 +1,11 @@
+## 0.4.0
+
+* Upgrade go_router to ^9.0.0
+
 ## 0.3.0
 
 * BREAKING CHANGES
-* Make the use of custom GoRoutes or ShellRoutes possible
+* Allow for GoRoutes or ShellRoutes
 * Rename childPageBuilder to subPageBuilder
 
 ## 0.2.0
