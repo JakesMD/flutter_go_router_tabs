@@ -1,6 +1,10 @@
+## 0.5.0
+
+* Migrate go_router to ^10.0.0
+
 ## 0.4.0
 
-* Upgrade go_router to ^9.0.0
+* Migrate go_router to ^9.0.0
 
 ## 0.3.0
 

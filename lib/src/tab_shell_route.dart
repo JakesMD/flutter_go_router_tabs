@@ -115,7 +115,7 @@ class TabShellRoute {
 
     for (int i = 0; i < _routePaths.length; i++) {
       for (final path in _routePaths[i]) {
-        final match = RegExp(path).matchAsPrefix(state.location);
+        final match = RegExp(path).matchAsPrefix(state.uri.toString());
         if ((match?.end ?? 0) > highScore) {
           highScore = match!.end;
           bestRoutePathIndex = i;
