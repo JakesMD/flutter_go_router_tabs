@@ -1,3 +1,6 @@
+> [!WARNING]
+> Discontinued! Use go_router's `StatefulShellRoute` instead ([see an example here](https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart)).
+
 A [go_router](https://pub.dev/packages/go_router) package add-on to improve tabbed navigation. It features a special ShellRoute that provides both the selected navigation item index and transition direction - regardless of the current route's nesting level or the user's navigation path.
 
 ![An animation of a web app navigating between tabs using this package.](https://raw.githubusercontent.com/JakesMD/flutter_go_router_tabs/main/screenshots/preview.gif)

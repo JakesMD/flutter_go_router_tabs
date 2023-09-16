@@ -1,5 +1,6 @@
 import "package:flutter/widgets.dart";
 import "package:go_router/go_router.dart";
+
 import "typedefs.dart";
 
 /// A Page with custom transition functionality.
@@ -175,6 +176,8 @@ class TabTransitionPage extends CustomTransitionPage {
   static TextDirection defaultDirection() => TextDirection.ltr;
 
   /// Creates a Page with custom transition functionality.
+  @Deprecated(
+      "Use go_router's `StatefulShellRoute` instead (example: https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart).")
   TabTransitionPage({
     required super.key,
     required super.child,

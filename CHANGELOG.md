@@ -1,3 +1,7 @@
+## 0.6.0
+
+* Discontinued
+
 ## 0.5.0
 
 * Migrate go_router to ^10.0.0

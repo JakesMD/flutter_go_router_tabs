@@ -74,6 +74,8 @@ class TabShellRoute {
   final TabShellRouteRoutesBuilder routes;
 
   /// Creates a temperary class that will be converted into a [ShellRoute].
+  @Deprecated(
+      "Use go_router's `StatefulShellRoute` instead (example: https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart).")
   TabShellRoute({
     this.observers,
     this.navigatorKey,
